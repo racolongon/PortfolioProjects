@@ -1,4 +1,5 @@
-
+--This project employs data from: https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx
+--Utilizing SQL to transform and organize data, no prior cleaning performed(removing NULLS) prior to importing the datasets. 
 --Aircraft damage and condition
 SELECT 
 	a.ev_id,
@@ -63,6 +64,7 @@ ORDER BY model_count DESC;
 --Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
 --Sentiment analysis will provide clues on common causes of damages. 
 --Map of events can help provide areas that are prone to aviation accidents or mishaps. 
+
 
 
 
