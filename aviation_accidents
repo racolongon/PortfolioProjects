@@ -1,0 +1,25 @@
+
+--Aircraft damage and condition
+SELECT 
+	a.ev_id,
+	a.damage,
+	a.acft_fire,
+	a.acft_expl
+FROM aircraft AS a
+
+--Counting aircraft damage grouped by damage type and excluding the nulls
+SELECT 
+	a.damage,
+	COUNT(a.damage) AS damage_type_count
+FROM aircraft AS a
+WHERE a.damage IS NOT NULL
+GROUP BY a.damage
+
+--Accident related aircraft make count in descending order
+SELECT 
+    a.acft_make,
+    COUNT(*) AS make_count
+FROM dbo.aircraft AS a
+WHERE a.acft_make IS NOT NULL
+GROUP BY a.acft_make
+ORDER BY make_count DESC;
