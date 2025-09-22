@@ -46,7 +46,7 @@ WHERE a.acft_model IS NOT NULL
 GROUP BY a.acft_model
 ORDER BY model_count DESC;
 
---Model count with damage count
+--Model count with damage count. This helps us identify which models have the most accidents.
 SELECT
 	MAX(a.acft_make) AS acft_make,
 	a.acft_model,
@@ -59,6 +59,11 @@ FROM dbo.aircraft AS a
 WHERE a.acft_model IS NOT NULL
 GROUP BY acft_model
 ORDER BY model_count DESC;
+
+--Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
+--Sentiment analysis will provide clues on common causes of damages. 
+--Map of events can help provide areas that are prone to aviation accidents or mishaps. 
+
 
 
 
