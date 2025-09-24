@@ -72,29 +72,17 @@ FROM dbo.Events_Sequence AS es
 
 --extracing phase of flight from the dictionary
 SELECT
-    d.[Column],
-    d.code_iaids,
-	d.meaning
+    d.[Column] AS code_type,
+    d.code_iaids AS code,
+    d.meaning
 FROM dbo.eADMSPUB_DataDictionary AS d
-WHERE d.[Column] = 'Phase_of_Flight'
-	AND code_iaids IS NOT NULL;
+WHERE 
+    (
+        d.[Column] = N'Occurrence_Code' 
+        AND d.code_iaids LIKE N'%xxx'      -- only grab the xxx codes
+    )
+    OR d.[Column] = N'Phase_of_Flight'     -- include all Phase_of_Flight codes
+    AND d.code_iaids IS NOT NULL
+ORDER BY code_type, code;
 
 --now lets try linking witht he events
-
-
-
-
---Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
---Sentiment analysis will provide clues on common causes of damages. 
---Map of events can help provide areas that are prone to aviation accidents or mishaps. 
-
-
-
-
-
-
-
-
-
-
-
