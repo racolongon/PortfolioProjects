@@ -86,3 +86,23 @@ WHERE
 ORDER BY code_type, code;
 
 --now lets try linking witht he events
+
+--Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
+--Sentiment analysis will provide clues on common causes of damages. 
+--Map of events can help provide areas that are prone to aviation accidents or mishaps. 
+
+
+--Review later
+SELECT 
+    a.damage,
+    d.meaning AS phase_of_flight,
+    COUNT(*) AS damage_count
+FROM dbo.Events_Sequence AS es
+JOIN dbo.aircraft AS a
+    ON es.ev_id = a.ev_id
+JOIN dbo.eADMSPUB_DataDictionary AS d
+    ON d.code_iaids = es.phase_no
+    AND d.[Column] = N'Phase_of_Flight'
+WHERE a.damage IS NOT NULL
+GROUP BY a.damage, d.meaning
+ORDER BY d.meaning, damage_count DESC;
