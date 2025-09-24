@@ -61,9 +61,34 @@ WHERE a.acft_model IS NOT NULL
 GROUP BY acft_model
 ORDER BY model_count DESC;
 
+--Analysis of flight phases linked to aircraft damage
+SELECT 
+	a.acft_make,
+	es.ev_id,
+	es.phase_no
+FROM dbo.Events_Sequence AS es
+	JOIN dbo.aircraft as a
+	ON es.ev_id = a.ev_id
+
+--extracing phase of flight from the dictionary
+SELECT
+    d.[Column],
+    d.code_iaids,
+	d.meaning
+FROM dbo.eADMSPUB_DataDictionary AS d
+WHERE d.[Column] = 'Phase_of_Flight'
+	AND code_iaids IS NOT NULL;
+
+--now lets try linking witht he events
+
+
+
+
 --Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
 --Sentiment analysis will provide clues on common causes of damages. 
 --Map of events can help provide areas that are prone to aviation accidents or mishaps. 
+
+
 
 
 
