@@ -85,14 +85,8 @@ WHERE
     AND d.code_iaids IS NOT NULL
 ORDER BY code_type, code;
 
---now lets try linking witht he events
-
---Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
---Sentiment analysis will provide clues on common causes of damages. 
---Map of events can help provide areas that are prone to aviation accidents or mishaps. 
-
-
---Review later
+----------Review later-------------------
+--Count of damage count per phase of flight. 
 SELECT 
     a.damage,
     d.meaning AS phase_of_flight,
@@ -106,3 +100,41 @@ JOIN dbo.eADMSPUB_DataDictionary AS d
 WHERE a.damage IS NOT NULL
 GROUP BY a.damage, d.meaning
 ORDER BY d.meaning, damage_count DESC;
+
+
+-- Aircraft Makers with Combined Phase of Flight Occurrences
+;WITH PhaseCounts AS (
+    SELECT
+        a.acft_make,
+        d.meaning AS phase_of_flight,
+        COUNT(*) AS occurrence_count,
+        ROW_NUMBER() OVER (
+            PARTITION BY a.acft_make
+            ORDER BY COUNT(*) DESC
+        ) AS rn
+    FROM dbo.Events_Sequence AS es
+    JOIN dbo.aircraft AS a
+        ON es.ev_id = a.ev_id
+    JOIN dbo.eADMSPUB_DataDictionary AS d
+        ON d.code_iaids = es.phase_no
+        AND d.[Column] = N'Phase_of_Flight'
+    WHERE a.acft_make IS NOT NULL
+      AND a.damage IS NOT NULL
+    GROUP BY a.acft_make, d.meaning
+)
+SELECT
+    acft_make,
+    phase_of_flight,
+    occurrence_count
+FROM PhaseCounts
+WHERE rn = 1
+ORDER BY occurrence_count DESC;
+
+
+
+
+--Adding flight phase for later. We want to figure out which flight phase has the most events. This can help us identify common issues as well.
+--Sentiment analysis will provide clues on common causes of damages. 
+--Map of events can help provide areas that are prone to aviation accidents or mishaps. 
+
+
